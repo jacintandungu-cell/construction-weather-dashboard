@@ -1,20 +1,22 @@
 import React, { useState } from "react";
 
-function SearchBar({ setCity }) {
-  const [input, setInput] = useState("");
+function SearchBar({ onSearch }) {
+  const [city, setCity] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setCity(input);
+    if (city.trim() !== "") {
+      onSearch(city);  // Pass city name to parent
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="search-bar">
+    <form className="search-bar" onSubmit={handleSubmit}>
       <input
         type="text"
         placeholder="Enter city name..."
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
+        value={city}
+        onChange={(e) => setCity(e.target.value)}
       />
       <button type="submit">Search</button>
     </form>
