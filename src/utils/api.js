@@ -1,15 +1,8 @@
-/*
- * All the weather requests live here, so the components only deal with
- * showing things on the screen.
- */
-
-// The key can come from a .env file. The fallback keeps the demo working.
 const API_KEY =
   process.env.REACT_APP_WEATHER_API_KEY || "3218121adef5ab8d8a1295284c166160";
 
 const BASE_URL = "https://api.openweathermap.org/data/2.5";
 
-// "weather" gives today, "forecast" gives the next 5 days.
 function loadWeather(endpoint, city) {
   const url =
     BASE_URL +

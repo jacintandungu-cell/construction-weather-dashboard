@@ -7,7 +7,6 @@ function WeatherResults({ city }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Runs whenever the city changes: fetch the weather, then store it.
   useEffect(() => {
     setLoading(true);
     setError("");
@@ -41,7 +40,6 @@ function WeatherResults({ city }) {
     );
   }
 
-  // All the advice for this weather is worked out in advisory.js.
   const advice = assessSite(weather);
 
   return (

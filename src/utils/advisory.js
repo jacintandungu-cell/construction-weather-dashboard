@@ -1,41 +1,26 @@
-/*
- * This file holds all the "thinking" of the dashboard.
- *
- * The weather API only gives us numbers (temperature, wind, rain). Here we
- * compare those numbers against the limits real construction sites work to,
- * and turn them into advice: can this trade work today, and what should the
- * site do about it?
- */
-
-// The limits we check against. Change a number here and the whole app follows.
 export const LIMITS = {
-  windAtHeight: 7.5, // m/s - scaffolding gets risky above this
-  windLifting: 10.8, // m/s (about 39 km/h) - cranes normally stop here
-  windGale: 17.2, // m/s - nobody should be working outside
-  tempFreeze: 2, // °C - concrete and mortar can freeze
-  tempCold: 5, // °C - concrete needs extra protection below this
-  tempHot: 30, // °C - heat stress, and concrete dries too fast
-  tempExtremeHeat: 38, // °C - too hot for heavy work
-  humidityHigh: 85, // % - paint and glue will not dry
-  humidityWatch: 75, // %
+  windAtHeight: 7.5, 
+  windLifting: 10.8,
+  windGale: 17.2,
+  tempFreeze: 2,
+  tempCold: 5, 
+  tempHot: 30,
+  tempExtremeHeat: 38,
+  humidityHigh: 85,
+  humidityWatch: 75,
 };
 
-// The three answers we can give, and how they are labelled on screen.
 export const STATUS = {
   go: { label: "Clear to work", badge: "GO" },
   caution: { label: "Work with controls", badge: "CAUTION" },
   stop: { label: "Stand down", badge: "STOP" },
 };
 
-// The API gives wind in metres per second. Site staff talk in km/h.
 function windKmh(metresPerSecond) {
   return Math.round(metresPerSecond * 3.6);
 }
 
-/*
- * The API response has a lot of nesting. This pulls out the few values we
- * need and gives them simple names, so the checks below stay easy to read.
- */
+
 export function getConditions(reading) {
   const weatherId = reading.weather[0].id;
 
@@ -44,21 +29,17 @@ export function getConditions(reading) {
     feelsLike: reading.main.feels_like,
     humidity: reading.main.humidity,
     wind: reading.wind.speed,
-    gust: reading.wind.gust, // may be undefined
+    gust: reading.wind.gust, 
     description: reading.weather[0].description,
-    rainChance: reading.pop || 0, // forecast only: 0 to 1
+    rainChance: reading.pop || 0,
     rainMm: reading.rain ? reading.rain["3h"] || 0 : 0,
-
-    // OpenWeather groups its condition codes in hundreds.
-    storm: weatherId >= 200 && weatherId < 300, // thunderstorm
-    wet: weatherId >= 300 && weatherId < 600, // drizzle or rain
+    storm: weatherId >= 200 && weatherId < 300, 
+    wet: weatherId >= 300 && weatherId < 600,
     heavyRain: weatherId >= 502 && weatherId < 600,
     snow: weatherId >= 600 && weatherId < 700,
-    lowVisibility: weatherId >= 700 && weatherId < 800, // mist, fog, dust
+    lowVisibility: weatherId >= 700 && weatherId < 800,
   };
 }
-
-/* ---- Small helpers so each check below reads like a list of rules ---- */
 
 function stop(note, action) {
   return { status: "stop", note: note, action: action };
@@ -76,10 +57,6 @@ function fine() {
   };
 }
 
-/*
- * One check per trade. Each one reads its rules from the most serious down,
- * and the first rule that matches is the answer. If none match, work is fine.
- */
 
 function checkConcrete(c) {
   if (c.storm || c.heavyRain) {
@@ -335,7 +312,6 @@ function checkLabour(c) {
   return fine();
 }
 
-// Build one row for the trade list: the name and icon plus the check result.
 function buildTrade(name, icon, result) {
   return {
     name: name,
@@ -346,7 +322,6 @@ function buildTrade(name, icon, result) {
   };
 }
 
-// The worst answer on site decides the answer for the whole site.
 function worstStatus(trades) {
   let worst = "go";
 
@@ -361,7 +336,6 @@ function worstStatus(trades) {
   return worst;
 }
 
-// Collect the actions to take, most serious first, with no repeats.
 function collectActions(trades) {
   const actions = [];
 
@@ -376,7 +350,6 @@ function collectActions(trades) {
   return actions.slice(0, 5);
 }
 
-// One sentence summing up the day for the site manager.
 function writeHeadline(trades, siteStatus) {
   if (siteStatus === "go") {
     return "Full programme is viable today - conditions are inside working limits for every trade.";
@@ -416,10 +389,6 @@ function writeHeadline(trades, siteStatus) {
   return "Stand down " + names.join(" and ") + " and re-plan the shift around them.";
 }
 
-/*
- * The main function for today's weather. Give it the API response and it
- * gives back everything the screen needs.
- */
 export function assessSite(weather) {
   const conditions = getConditions(weather);
 
@@ -449,14 +418,12 @@ export function assessSite(weather) {
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-// "Today" and "Tomorrow" read better than the weekday name.
 function nameTheDay(date, position) {
   if (position === 0) return "Today";
   if (position === 1) return "Tomorrow";
   return DAY_NAMES[date.getDay()];
 }
 
-// Can a crew actually work in this 3-hour slot?
 function slotIsWorkable(slot) {
   return (
     !slot.storm &&
@@ -468,10 +435,7 @@ function slotIsWorkable(slot) {
   );
 }
 
-/*
- * Score a day out of 100, where 100 is a full day with nothing in the way.
- * Every problem takes points off.
- */
+
 function scoreDay(day) {
   let score = 100;
 
@@ -521,12 +485,8 @@ function adviseDay(day) {
   return "Good window - schedule pours, roofing and lifts.";
 }
 
-/*
- * The forecast API sends a reading every 3 hours for the next 5 days.
- * This groups those readings into days and works out the advice for each.
- */
+
 export function summariseDays(forecastList) {
-  // Step 1: group the readings by date, e.g. "2026-08-20".
   const grouped = [];
 
   forecastList.forEach(function (reading) {
@@ -547,7 +507,6 @@ export function summariseDays(forecastList) {
     group.slots.push(slot);
   });
 
-  // Step 2: turn each group of readings into one day of advice.
   const days = [];
 
   grouped.slice(0, 5).forEach(function (group, position) {
@@ -570,15 +529,12 @@ export function summariseDays(forecastList) {
       if (slot.storm) storm = true;
       rainMm = rainMm + slot.rainMm;
 
-      // Only working hours count towards the usable window.
       if (slot.hour >= 6 && slot.hour < 18) {
         daytimeSlots = daytimeSlots + 1;
         if (slotIsWorkable(slot)) workableSlots = workableSlots + 1;
       }
     });
 
-    // Today's forecast starts at the current hour, so late in the day
-    // there is no working time left at all. null means "no shift left".
     const workableHours = daytimeSlots > 0 ? workableSlots * 3 : null;
 
     const date = new Date(group.date + "T12:00:00");
@@ -606,10 +562,6 @@ export function summariseDays(forecastList) {
   return days;
 }
 
-/*
- * Looks across the 5 days and says which one to book the important work into.
- * Days with no working hours left are skipped - you cannot plan into them.
- */
 export function planningTip(days) {
   const usable = days.filter(function (day) {
     return day.workableHours !== null;

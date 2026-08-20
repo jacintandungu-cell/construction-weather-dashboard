@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { fetchForecast } from "../utils/api";
 import { summariseDays, planningTip, STATUS } from "../utils/advisory";
 
-// workableHours is null when there are no working hours left in the day.
 function windowText(day) {
   if (day.workableHours === null) {
     return "Shift over - plan from tomorrow";
@@ -19,7 +18,6 @@ function Forecast({ city }) {
 
     fetchForecast(city)
       .then((data) => {
-        // data.list holds a reading every 3 hours; group it into days.
         setDays(summariseDays(data.list));
         setLoading(false);
       })
@@ -38,7 +36,6 @@ function Forecast({ city }) {
     );
   }
 
-  // The current weather panel already shows the error, so stay quiet here.
   if (days.length === 0) {
     return null;
   }
@@ -68,7 +65,6 @@ function Forecast({ city }) {
               {Math.round(day.maxTemp)}° <span>/ {Math.round(day.minTemp)}°</span>
             </p>
 
-            {/* A simple bar showing how much of the day is usable. */}
             <div className="meter">
               <span
                 className={"meter-fill fill-" + day.rating}
