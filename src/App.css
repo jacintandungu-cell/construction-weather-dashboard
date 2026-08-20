@@ -1,3 +1,4 @@
+/* General App styling */
 .App {
   font-family: Arial, sans-serif;
   text-align: center;
@@ -7,6 +8,7 @@
   flex-direction: column;
 }
 
+/* Navbar */
 .navbar {
   background-color: #2c3e50;
   color: white;
@@ -35,7 +37,7 @@
   text-decoration: underline;
 }
 
-
+/* Search Bar */
 .search-bar {
   margin: 1.5rem auto;
   display: flex;
@@ -63,6 +65,7 @@
   background-color: #2980b9;
 }
 
+/* Weather Results */
 .weather-results {
   background: white;
   margin: 1rem auto;
@@ -79,7 +82,7 @@
   display: block;
 }
 
-
+/* Forecast Grid */
 .forecast {
   margin: 2rem auto;
   width: 90%;
@@ -117,6 +120,7 @@
   font-size: 0.9rem;
 }
 
+/* Footer */
 .footer {
   margin-top: auto;
   background-color: #2c3e50;
@@ -125,6 +129,9 @@
   text-align: center;
 }
 
+/* Responsive Layouts */
+
+/* Small screens (phones) */
 @media (max-width: 600px) {
   .search-bar {
     flex-direction: column;
@@ -150,6 +157,7 @@
   }
 }
 
+/* Medium screens (tablets) */
 @media (min-width: 601px) and (max-width: 1024px) {
   .forecast-grid {
     justify-content: space-around;
@@ -160,6 +168,7 @@
   }
 }
 
+/* Large screens (desktops) */
 @media (min-width: 1025px) {
   .forecast-grid {
     justify-content: center;
@@ -168,78 +177,4 @@
   .forecast-card {
     width: 150px;
   }
-}
-
-.spinner-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 2rem;
-  color: #2c3e50;
-}
-
-.spinner {
-  border: 6px solid #f3f3f3;
-  border-top: 6px solid #3498db;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-
-.error-card {
-  background-color: #ffe5e5;
-  border: 1px solid #ff4d4d;
-  color: #2c3e50;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-top: 1rem;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.error-icon {
-  font-size: 1.5rem;
-  margin-right: 0.5rem;
-}
-
-.thresholds {
-  display: flex;
-  justify-content: space-around;
-  margin: 2rem auto;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.card {
-  flex: 1;
-  padding: 1.5rem;
-  border-radius: 12px;
-  text-align: center;
-  font-family: 'Roboto', sans-serif;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  color: #fff;
-}
-
-.card h3 {
-  margin-bottom: 1rem;
-}
-
-.card.go {
-  background-color: #0f5132; /* Green */
-}
-
-.card.caution {
-  background-color: #664d03; /* Amber */
-}
-
-.card.stop {
-  background-color: #842029; /* Red */
 }
