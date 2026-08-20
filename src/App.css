@@ -1,4 +1,3 @@
-/* General App styling */
 .App {
   font-family: Arial, sans-serif;
   text-align: center;
@@ -8,7 +7,7 @@
   flex-direction: column;
 }
 
-/* Navbar */
+
 .navbar {
   background-color: #2c3e50;
   color: white;
@@ -82,7 +81,7 @@
   display: block;
 }
 
-/* Forecast Grid */
+
 .forecast {
   margin: 2rem auto;
   width: 90%;
@@ -120,7 +119,7 @@
   font-size: 0.9rem;
 }
 
-/* Footer */
+
 .footer {
   margin-top: auto;
   background-color: #2c3e50;
@@ -129,9 +128,6 @@
   text-align: center;
 }
 
-/* Responsive Layouts */
-
-/* Small screens (phones) */
 @media (max-width: 600px) {
   .search-bar {
     flex-direction: column;
@@ -157,7 +153,6 @@
   }
 }
 
-/* Medium screens (tablets) */
 @media (min-width: 601px) and (max-width: 1024px) {
   .forecast-grid {
     justify-content: space-around;
@@ -168,7 +163,7 @@
   }
 }
 
-/* Large screens (desktops) */
+
 @media (min-width: 1025px) {
   .forecast-grid {
     justify-content: center;
