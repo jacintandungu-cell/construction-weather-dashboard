@@ -1,65 +1,59 @@
 import React, { useState } from "react";
 
+const TABS = [
+  {
+    id: "weather",
+    label: "Site conditions",
+    body: "A go / caution / stop call for every trade on site - concrete, roofing, lifting, painting, earthworks, scaffolding, masonry and general labour - with the control measures to put in place before the shift starts.",
+  },
+  {
+    id: "forecast",
+    label: "5-day plan",
+    body: "Each of the next five days scored for workable hours, so you can book pours, major lifts and roofing into the best window and move indoor works into the wet ones.",
+  },
+  {
+    id: "about",
+    label: "About",
+    body: "Weather delays and rework are avoidable when the forecast is read against real site limits. This dashboard applies those limits for you and tells you what to do, not just what the weather is.",
+  },
+];
+
 function Navbar() {
-  const [activeSection, setActiveSection] = useState("weather");
+  const [active, setActive] = useState("weather");
+  const panel = TABS.find((tab) => tab.id === active);
 
   return (
-    <div>
-      {/* Navigation */}
-      <nav className="bg-blue-200 flex justify-between items-center px-6 py-3 shadow-md">
-        <h1 className="text-xl font-bold text-black">Construction Weather Dashboard</h1>
-        <ul className="flex gap-6 font-bold text-black">
-          <li>
-            <a href="#weather" onClick={() => setActiveSection("weather")}>
-              Weather
-            </a>
-          </li>
-          <li>
-            <a href="#forecast" onClick={() => setActiveSection("forecast")}>
-              Forecast
-            </a>
-          </li>
-          <li>
-            <a href="#about" onClick={() => setActiveSection("about")}>
-              About
-            </a>
-          </li>
-        </ul>
-      </nav>
-
-      {/* Content Sections */}
-      <div className="p-6">
-        {activeSection === "weather" && (
-          <div id="weather">
-            <h2 className="text-lg font-bold text-black mb-2">Weather</h2>
-            <p className="text-black">
-              This section shows the current weather conditions for your selected city,
-              including temperature, wind speed, humidity, and sky conditions.
-            </p>
+    <header className="navbar">
+      <div className="navbar-top">
+        <div className="brand">
+          <span className="brand-mark" aria-hidden="true">
+            🏗
+          </span>
+          <div>
+            <h1>Construction Weather Dashboard</h1>
+            <p>Weather turned into site decisions</p>
           </div>
-        )}
+        </div>
 
-        {activeSection === "forecast" && (
-          <div id="forecast">
-            <h2 className="text-lg font-bold text-black mb-2">Forecast</h2>
-            <p className="text-black">
-              Here you’ll find a 5‑day forecast with daily highs, lows, and weather icons
-              to help plan construction schedules more effectively.
-            </p>
-          </div>
-        )}
-
-        {activeSection === "about" && (
-          <div id="about">
-            <h2 className="text-lg font-bold text-black mb-2">About</h2>
-            <p className="text-black">
-              The Construction Weather Dashboard is designed to provide real‑time weather
-              insights for construction projects, ensuring safety and efficiency on site.
-            </p>
-          </div>
-        )}
+        <nav>
+          <ul>
+            {TABS.map((tab) => (
+              <li key={tab.id}>
+                <button
+                  type="button"
+                  className={active === tab.id ? "tab tab-active" : "tab"}
+                  onClick={() => setActive(tab.id)}
+                >
+                  {tab.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
-    </div>
+
+      <p className="navbar-panel">{panel.body}</p>
+    </header>
   );
 }
 

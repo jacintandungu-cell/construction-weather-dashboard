@@ -34,10 +34,23 @@ This dashboard solves these challenges by:
 
 ## ✨ Features
 
+- 🚦 **Site Guidance Engine**
+  Turns the readings into a **go / caution / stop** call for each trade — concrete pours,
+  roofing, crane lifts, painting, earthworks, scaffolding, masonry and general labour —
+  with the control measures to put in place. Thresholds live in `src/utils/advisory.js`.
+
+- 📋 **Actions for the shift**
+  A short, de-duplicated action list (covers on standby, hydration breaks, tie-downs,
+  lift-plan checks) ready for the morning toolbox talk.
+
+- 🗓️ **Workable-hours scoring**
+  Each of the next five days is scored for usable working hours, with a recommendation
+  on which day to book weather-critical works and which to keep for indoor tasks.
+
 - 🌦️ **Weather API Integration**  
   Displays live conditions (temperature, humidity, wind speed, etc.) for any site location.
 
-- 🗺️ **Google Maps Directions**  
+- 🗺️ **Google Maps Directions** _(planned)_  
   Provides routes and site locations so constructors can easily navigate to projects.
 
 - 🔍 **Search Bar**  
@@ -102,8 +115,10 @@ construction-weather-dashboard/
 │   │   ├── SearchBar.js
 │   │   ├── WeatherResults.js
 │   │   ├── Forecast.js
-│   │   ├── Footer.js
-│   │   └── Map.js
+│   │   └── Footer.js
+│   ├── utils/
+│   │   ├── advisory.js   # site thresholds & guidance rules
+│   │   └── api.js        # weather API calls
 │   ├── App.js
 │   ├── App.css
 │   └── index.js

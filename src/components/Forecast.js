@@ -1,37 +1,93 @@
 import React, { useState, useEffect } from "react";
+import { fetchForecast } from "../utils/api";
+import { summariseDays, planningTip, STATUS } from "../utils/advisory";
+
+// workableHours is null when there are no working hours left in the day.
+function windowText(day) {
+  if (day.workableHours === null) {
+    return "Shift over - plan from tomorrow";
+  }
+  return day.score + "% workable · " + day.workableHours + "h window";
+}
 
 function Forecast({ city }) {
-  const [forecast, setForecast] = useState([]);
+  const [days, setDays] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=3218121adef5ab8d8a1295284c166160&units=metric`
-    )
-      .then((res) => res.json())
-      .then((json) => {
-        setForecast(json.list.slice(0, 5)); // next 5 entries
+
+    fetchForecast(city)
+      .then((data) => {
+        // data.list holds a reading every 3 hours; group it into days.
+        setDays(summariseDays(data.list));
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setDays([]);
+        setLoading(false);
+      });
   }, [city]);
 
-  if (loading) return <p>Loading forecast...</p>;
+  if (loading) {
+    return (
+      <section className="panel loading">
+        <span className="spinner" />
+        <p>Building the 5-day work plan...</p>
+      </section>
+    );
+  }
+
+  // The current weather panel already shows the error, so stay quiet here.
+  if (days.length === 0) {
+    return null;
+  }
+
+  const tip = planningTip(days);
 
   return (
-    <div className="forecast">
-      <h2>5-Day Forecast</h2>
+    <section className="panel" id="forecast">
+      <header className="panel-head">
+        <div>
+          <p className="eyebrow">5-day plan</p>
+          <h2>Programme outlook</h2>
+        </div>
+      </header>
+
+      {tip && <div className="tip">📋 {tip}</div>}
+
       <div className="forecast-grid">
-        {forecast.map((item, index) => (
-          <div key={index} className="forecast-card">
-            <p>{new Date(item.dt_txt).toLocaleDateString()}</p>
-            <p>🌡 {item.main.temp}°C</p>
-            <p>☁ {item.weather[0].description}</p>
-          </div>
+        {days.map((day) => (
+          <article key={day.date} className={"day day-" + day.rating}>
+            <header>
+              <strong>{day.label}</strong>
+              <span>{day.dateText}</span>
+            </header>
+
+            <p className="day-temp">
+              {Math.round(day.maxTemp)}° <span>/ {Math.round(day.minTemp)}°</span>
+            </p>
+
+            {/* A simple bar showing how much of the day is usable. */}
+            <div className="meter">
+              <span
+                className={"meter-fill fill-" + day.rating}
+                style={{ width: day.score + "%" }}
+              />
+            </div>
+            <p className="day-score">{windowText(day)}</p>
+
+            <ul className="day-stats">
+              <li>💧 {Math.round(day.rainChance * 100)}% rain</li>
+              <li>💨 {Math.round(day.maxWind * 3.6)} km/h</li>
+            </ul>
+
+            <p className="day-guidance">{day.guidance}</p>
+            <span className={"pill pill-" + day.rating}>{STATUS[day.rating].badge}</span>
+          </article>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 

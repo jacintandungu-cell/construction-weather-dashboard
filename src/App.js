@@ -12,13 +12,27 @@ function App() {
   return (
     <div className="App">
       <Navbar />
-      <SearchBar setCity={setCity} />
-      {city && (
-        <>
-          <WeatherResults city={city} />
-          <Forecast city={city} />
-        </>
-      )}
+
+      <main className="content">
+        <SearchBar setCity={setCity} />
+
+        {city ? (
+          <>
+            <WeatherResults city={city} />
+            <Forecast city={city} />
+          </>
+        ) : (
+          <section className="panel empty">
+            <h2>Plan the shift before you lose it to the weather</h2>
+            <p>
+              Enter a site location to get a go / caution / stop call for each trade, the
+              control measures to put in place, and the best working window over the next
+              five days.
+            </p>
+          </section>
+        )}
+      </main>
+
       <Footer />
     </div>
   );
